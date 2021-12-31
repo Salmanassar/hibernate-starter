@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+  elasticsearch:
+    image: elasticsearch:6.8.20
+    ports:
+      - "9200:9200"
+  logstash:
+    image: logstash:6.8.20
+    command: -f /etc/logstash/conf.d/
+    environment:
+      - LOGSTASH_JDBC_URL=jdbc:postgresql://localhost:5433/postgres
+      - LOGSTASH_JDBC_DRIVER=org.postgresql.Driver
+      - LOGSTASH_JDBC_DRIVER_JAR_LOCATION=/usr/share/logstash/logstash-core/lib/jars/postgresql.jar
+      - LOGSTASH_JDBC_USERNAME=postgres
+      - LOGSTASH_JDBC_PASSWORD=user
+      - LOGSTASH_ELASTICSEARCH_HOST=http://elasticsearch:9200
+    volumes:
+      - ./logstash.d:/etc/logstash/conf.d
+    depends_on:
+      - elasticsearch
+      - kibana
+      - db
+    ports:
+      - "5000:5000"
+  kibana:
+    image: kibana:6.8.20
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5601:5601"
+  db:
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_PASSWORD=user
+      - POSTGRES_USERNAME=postgres
+    ports:
+      - 5433:5432
+    volumes:
+      - ./db:/opt/postgres

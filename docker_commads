@@ -1,2 +1,2 @@
 start download and run postgres container with commands
-docker run --name 14.1-alpine -e POSTGRES_PASSWORD=user -p 5433:5432 -d postgres
+docker run --name postgresql -e POSTGRES_PASSWORD=user -p 5433:5432 -d postgres:14-alpine

@@ -1,6 +1,7 @@
 package com.hibernate;
 
 import com.hibernate.entity.Birthday;
+import com.hibernate.entity.PersonInfo;
 import com.hibernate.entity.Role;
 import com.hibernate.entity.User;
 import com.hibernate.util.HibernateConfigurationUtil;
@@ -17,17 +18,19 @@ public class HibernateStarter {
     public static void main(String[] args) throws SQLException {
         User user = User.builder()
                 .userName("alexx@gmail.com")
-                .firstName("Alex")
-                .lastName("Alexeev")
-                .birthDay(new Birthday(LocalDate.of(1989, 3, 10)))
-                .role(Role.USER)
-                .info("""
-                        {
-                        "name": "Alex",
-                        "id": 15
-                        }
-                        """)
-                .build();
+                .personInfo(PersonInfo.builder()
+                        .firstName("Alex")
+                        .lastName("Alexeev")
+                        .birthDay(new Birthday(LocalDate.of(1989, 3, 10)))
+                        .build())
+                        .role(Role.USER)
+                        .info("""
+                                {
+                                "name": "Alex",
+                                "id": 15
+                                }
+                                """)
+                        .build();
         log.info("The entity of User is a transient state, object {}", user);
 
 //If you need to use annotations without hibernate.cfg.xml use the java code below
@@ -46,7 +49,7 @@ public class HibernateStarter {
             }
             try (Session session2 = sessionFactory.openSession()) {
                 session2.beginTransaction();
-                user.setFirstName("Ollala");
+                user.getPersonInfo().setFirstName("Ollala");
                 session2.merge(user);
 //                session2.refresh(user);
                 session2.getTransaction().commit();

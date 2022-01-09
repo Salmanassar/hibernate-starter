@@ -1,36 +1,34 @@
 package com.hibernate.entity;
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 
 @Data
+@ToString(exclude = {"company", "profile"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Builder
+@EqualsAndHashCode(of = "userName")
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 @Table(name = "users", schema = "public")
 public class User {
     @Id
-    @GeneratedValue(generator = "user_gen", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "user_gen", sequenceName = "users_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_name", unique = true)
+    @Column(name = "user_name", nullable = false, unique = true)
     private String userName;
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name="firstName",column=@Column(name="first_name")),
-            @AttributeOverride(name="lastName",column=@Column(name="last_name")),
-            @AttributeOverride(name="birthDay",column=@Column(name="birth_date"))
+            @AttributeOverride(name = "firstName", column = @Column(name = "first_name")),
+            @AttributeOverride(name = "lastName", column = @Column(name = "last_name")),
+            @AttributeOverride(name = "birthDay", column = @Column(name = "birth_date"))
     })
     private PersonInfo personInfo;
 
@@ -39,4 +37,14 @@ public class User {
 
     @Type(type = "jsonb")
     private String info;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id") //nevertheless, by default, it would be company_id
+    private Company company;
+
+    @OneToOne(mappedBy = "user",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            optional = false)
+    private Profile profile;
 }

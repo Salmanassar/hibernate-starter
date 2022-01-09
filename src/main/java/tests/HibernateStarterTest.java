@@ -1,6 +1,10 @@
 package tests;
 
+import com.hibernate.entity.Company;
+import com.hibernate.entity.Profile;
 import com.hibernate.entity.User;
+import com.hibernate.util.HibernateConfigurationUtil;
+import lombok.Cleanup;
 import org.junit.jupiter.api.Test;
 
 import javax.persistence.Column;
@@ -14,6 +18,50 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 class HibernateStarterTest {
+
+    @Test
+    public void profileTest() {
+        try (var sessionFactory = HibernateConfigurationUtil.buildSessionFactory();
+             var session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            var user = User.builder()
+                    .userName("serega.test2@net.com")
+                    .build();
+            var profile = Profile.builder()
+                    .street("Shwejka 44")
+                    .language("tr")
+                    .build();
+            profile.setUser(user);
+            session.save(user);
+            session.getTransaction().commit();
+        }
+    }
+
+    @Test
+    public void addUserToNewCompany() {
+        @Cleanup var sessionFactory = HibernateConfigurationUtil.buildSessionFactory();
+        @Cleanup var session = sessionFactory.openSession();
+        session.beginTransaction();
+        var company = Company.builder()
+                .name("Yandex")
+                .build();
+        var user = User.builder()
+                .userName("sveta@net.com")
+                .build();
+        company.addUser(user);
+        session.save(company);
+        session.getTransaction().commit();
+    }
+
+    @Test
+    public void oneToMany() {
+        @Cleanup var sessionFactory = HibernateConfigurationUtil.buildSessionFactory();
+        @Cleanup var session = sessionFactory.openSession();
+        session.beginTransaction();
+        Company company = session.get(Company.class, 5L);
+        System.out.println(" ");
+        session.getTransaction().commit();
+    }
 
     @Test
     public void checkReflectionAPI() throws SQLException, IllegalAccessException {

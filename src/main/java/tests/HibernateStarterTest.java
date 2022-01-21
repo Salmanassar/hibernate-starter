@@ -1,5 +1,6 @@
 package tests;
 
+import com.hibernate.entity.Chat;
 import com.hibernate.entity.Company;
 import com.hibernate.entity.Profile;
 import com.hibernate.entity.User;
@@ -18,14 +19,28 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 class HibernateStarterTest {
+    @Test
+    public void manyToManyTest() {
+        try (var sessionFactory = HibernateConfigurationUtil.buildSessionFactory();
+             var session = sessionFactory.openSession()) {
+            session.beginTransaction();
+         var user  =  session.get(User.class, 1L);
+            var chat = Chat.builder()
+                    .name("Bob Mary")
+                    .build();
+            user.addChat(chat);
+            session.save(chat);
+            session.getTransaction().commit();
+        }
+    }
 
     @Test
-    public void profileTest() {
+    public void oneToOneTest() {
         try (var sessionFactory = HibernateConfigurationUtil.buildSessionFactory();
              var session = sessionFactory.openSession()) {
             session.beginTransaction();
             var user = User.builder()
-                    .userName("serega.test2@net.com")
+                    .userName("serega.test5@net.com")
                     .build();
             var profile = Profile.builder()
                     .street("Shwejka 44")

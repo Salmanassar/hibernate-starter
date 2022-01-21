@@ -6,14 +6,16 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
+@Entity
 @Data
-@ToString(exclude = {"company", "profile"})
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Builder
 @EqualsAndHashCode(of = "userName")
+@ToString(exclude = {"company", "profile", "chats"})
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 @Table(name = "users", schema = "public")
 public class User {
@@ -45,6 +47,18 @@ public class User {
     @OneToOne(mappedBy = "user",
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
-            optional = false)
+            optional = false)  //  the entity (profile) has to in the database
     private Profile profile;
+
+    @Builder.Default
+    @ManyToMany()
+    @JoinTable(name = "user_chat",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "chat_id"))
+    private List<Chat> chats = new ArrayList<>();
+
+    public void addChat(Chat chat){
+        chats.add(chat);
+        chat.getUsers().add(this);
+    }
 }

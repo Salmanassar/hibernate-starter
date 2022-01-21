@@ -16,7 +16,7 @@ public class Profile {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "user_id") //it does not need to use user_id by default hibernate uses name and add _id
     private User user;
 
     private String street;

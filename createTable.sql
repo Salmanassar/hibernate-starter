@@ -19,10 +19,30 @@ CREATE TABLE company
 -- owned by users.id;
 create table profile
 (
-    id BIGSERIAL PRIMARY KEY,
-    user_id  BIGINT NOT NULL UNIQUE references users (id),
+    id       BIGSERIAL PRIMARY KEY,
+    user_id  BIGINT NOT NULL UNIQUE REFERENCES users (id),
     street   VARCHAR(255),
     language CHAR(2)
 );
+
+CREATE TABLE chat
+(
+    id   BIGSERIAL PRIMARY KEY,
+    name VARCHAR(255)
+);
+
+CREATE TABLE user_chat
+(
+    id         BIGSERIAL PRIMARY KEY,
+    user_id    BIGINT REFERENCES users (id),
+    chat_id    BIGINT REFERENCES chat (id),
+    created_at TIMESTAMP NOT NULL,
+    created_by VARCHAR(255) NOT NULL
+);
+
+
 DROP table users;
+DROP table company;
 DROP table profile;
+DROP table chat;
+DROP table user_chat;

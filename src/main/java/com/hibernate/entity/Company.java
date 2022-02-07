@@ -3,8 +3,8 @@ package com.hibernate.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -21,7 +21,7 @@ public class Company {
     @Builder.Default
     @ToString.Exclude
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
-    private Set<User> users = new HashSet<>();
+    private List<User> users = new ArrayList<>();
 
     public void addUser(User user){
         users.add(user);

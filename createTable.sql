@@ -40,7 +40,13 @@ CREATE TABLE user_chat
     created_by VARCHAR(255) NOT NULL,
     UNIQUE (user_id, chat_id)
 );
-
+CREATE TABLE company_locale
+(
+  company_id INT NOT NULL REFERENCES company(id),
+  language CHAR(4) NOT NULL,
+  description VARCHAR(128) NOT NULL,
+  PRIMARY KEY (company_id, language)
+);
 
 DROP table users;
 DROP table company;

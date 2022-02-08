@@ -1,9 +1,6 @@
 package tests;
 
-import com.hibernate.entity.Chat;
-import com.hibernate.entity.Company;
-import com.hibernate.entity.Profile;
-import com.hibernate.entity.User;
+import com.hibernate.entity.*;
 import com.hibernate.util.HibernateConfigurationUtil;
 import lombok.Cleanup;
 import org.junit.jupiter.api.Test;
@@ -20,11 +17,24 @@ import java.util.stream.Collectors;
 
 class HibernateStarterTest {
     @Test
+    public void companyLocaleInfoTest() {
+        try (var sessionFactory = HibernateConfigurationUtil.buildSessionFactory();
+             var session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            var company = session.get(Company.class, 7L);
+//            company.getLocaleInfos().add(LocaleInfo.of("RU", "Новая компания"));
+//            company.getLocaleInfos().add(LocaleInfo.of("EN", "New company"));
+            System.out.println(company.getLocaleInfos());
+            session.getTransaction().commit();
+        }
+    }
+
+    @Test
     public void manyToManyTest() {
         try (var sessionFactory = HibernateConfigurationUtil.buildSessionFactory();
              var session = sessionFactory.openSession()) {
             session.beginTransaction();
-         var user  =  session.get(User.class, 1L);
+            var user = session.get(User.class, 1L);
             var chat = Chat.builder()
                     .name("Bob Mary")
                     .build();

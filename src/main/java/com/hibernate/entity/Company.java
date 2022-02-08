@@ -1,10 +1,13 @@
 package com.hibernate.entity;
 
 import lombok.*;
+import org.hibernate.annotations.SortNatural;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Data
 @Entity
@@ -22,7 +25,8 @@ public class Company {
     @ToString.Exclude
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     @OrderColumn(name = "id")
-    private List<User> users = new ArrayList<>();
+    @SortNatural
+    private Set<User> users = new TreeSet<>();
 
     @Builder.Default
     @ElementCollection

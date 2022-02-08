@@ -18,7 +18,7 @@ import java.util.List;
 @ToString(exclude = {"company", "profile", "chats"})
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 @Table(name = "users", schema = "public")
-public class User {
+public class User implements Comparable<User> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -60,5 +60,10 @@ public class User {
     public void addChat(Chat chat){
         chats.add(chat);
         chat.getUsers().add(this);
+    }
+
+    @Override
+    public int compareTo(User o) {
+        return userName.compareTo(o.userName);
     }
 }

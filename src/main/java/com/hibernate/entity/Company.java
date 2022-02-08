@@ -4,9 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity
@@ -23,8 +21,8 @@ public class Company {
     @Builder.Default
     @ToString.Exclude
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
-    @OrderBy("personInfo.lastName")
-    private Set<User> users = new HashSet<>();
+    @OrderColumn(name = "id")
+    private List<User> users = new ArrayList<>();
 
     @Builder.Default
     @ElementCollection

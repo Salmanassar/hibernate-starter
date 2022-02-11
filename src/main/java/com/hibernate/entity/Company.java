@@ -1,12 +1,13 @@
 package com.hibernate.entity;
 
 import lombok.*;
+import org.hibernate.annotations.SortNatural;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 @Data
 @Entity
@@ -26,7 +27,8 @@ public class Company {
     @ToString.Exclude
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     @MapKey(name = "userName")
-    private Map<String, User> users = new HashMap<>();
+    @SortNatural
+    private Map<String, User> users = new TreeMap<>();
 
     @Builder.Default
     @ElementCollection

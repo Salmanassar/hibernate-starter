@@ -24,7 +24,7 @@ class HibernateStarterTest {
             var company = session.get(Company.class, 7L);
 //            company.getLocaleInfos().add(LocaleInfo.of("RU", "Новая компания"));
 //            company.getLocaleInfos().add(LocaleInfo.of("EN", "New company"));
-            System.out.println(company.getLocaleInfos());
+            company.getUsers().forEach((k,v)->System.out.println(v));
             session.getTransaction().commit();
         }
     }

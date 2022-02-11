@@ -1,13 +1,12 @@
 package com.hibernate.entity;
 
 import lombok.*;
-import org.hibernate.annotations.SortNatural;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.Map;
 
 @Data
 @Entity
@@ -19,14 +18,15 @@ public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Builder.Default
     @ToString.Exclude
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
-    @OrderColumn(name = "id")
-    @SortNatural
-    private Set<User> users = new TreeSet<>();
+    @MapKey(name = "userName")
+    private Map<String, User> users = new HashMap<>();
 
     @Builder.Default
     @ElementCollection
@@ -36,7 +36,7 @@ public class Company {
     private List<LocaleInfo> localeInfos = new ArrayList<>();
 
     public void addUser(User user) {
-        users.add(user);
+        users.put(user.getUserName(), user);
         user.setCompany(this);
     }
 }

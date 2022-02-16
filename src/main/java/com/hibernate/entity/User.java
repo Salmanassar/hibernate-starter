@@ -2,25 +2,27 @@ package com.hibernate.entity;
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
-@Data
-@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "userName")
-@ToString(exclude = {"company", "profile", "chats"})
-@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Table(name = "users", schema = "public")
-public class User implements Comparable<User>, BaseEntity<Long> {
+@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
+public abstract class User implements Comparable<User>, BaseEntity<Long> {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "user_name", nullable = false, unique = true)
@@ -41,20 +43,22 @@ public class User implements Comparable<User>, BaseEntity<Long> {
     private String info;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id") //nevertheless, by default, it would be company_id
+    @JoinColumn(name = "company_id")
+    @ToString.Exclude //nevertheless, by default, it would be company_id
     private Company company;
 
     @OneToOne(mappedBy = "user",
             cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
-            optional = false)  //  the entity (profile) has to in the database
+            fetch = FetchType.LAZY)
+    @ToString.Exclude  //  the entity (profile) has to in the database
     private Profile profile;
 
-    @Builder.Default
+//    @Builder.Default
     @ManyToMany()
     @JoinTable(name = "user_chat",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "chat_id"))
+    @ToString.Exclude
     private List<Chat> chats = new ArrayList<>();
 
     public void addChat(Chat chat){
@@ -65,5 +69,18 @@ public class User implements Comparable<User>, BaseEntity<Long> {
     @Override
     public int compareTo(User o) {
         return userName.compareTo(o.userName);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        User user = (User) o;
+        return id != null && Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

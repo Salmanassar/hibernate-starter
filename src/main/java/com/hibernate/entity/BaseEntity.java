@@ -6,5 +6,5 @@ public interface BaseEntity<T extends Serializable> {
 
     T getId();
 
-    T setId(T id);
+    void setId(T id);
 }

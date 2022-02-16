@@ -16,7 +16,7 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "type")
 @Table(name = "users", schema = "public")
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)

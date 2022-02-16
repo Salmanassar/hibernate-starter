@@ -24,12 +24,12 @@ public class HibernateStarter {
                         .birthDay(new Birthday(LocalDate.of(1989, 3, 10)))
                         .build())
                 .role(Role.USER)
-                .info("""
-                        {
-                        "name": "Alex",
-                        "id": 15
-                        }
-                        """)
+//                .info("""
+//                        {
+//                        "name": "Alex",
+//                        "id": 15
+//                        }
+//                        """)
                 .company(company)
                 .build();
         log.info("The entity of User is a transient state, object {}", user);

@@ -9,11 +9,16 @@ import org.hibernate.cfg.Configuration;
 @UtilityClass
 public class HibernateConfigurationUtil {
     public static SessionFactory buildSessionFactory(){
+        Configuration configuration = buildConfiguration();
+        return configuration.buildSessionFactory();
+    }
+
+    public static Configuration buildConfiguration() {
         Configuration configuration = new Configuration();
         configuration.addAttributeConverter(new BirthdayConvertor(),true);
         configuration.registerTypeOverride(new JsonBinaryType());
         configuration.configure("hibernate.cfg.xml");
-        return configuration.buildSessionFactory();
+        return configuration;
     }
 
 }

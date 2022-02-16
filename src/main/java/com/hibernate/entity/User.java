@@ -16,7 +16,8 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type")
 @Table(name = "users", schema = "public")
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 public abstract class User implements Comparable<User>, BaseEntity<Long> {

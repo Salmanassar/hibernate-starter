@@ -2,6 +2,7 @@ package com.hibernate.entity;
 
 import lombok.*;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@DiscriminatorValue("manager")
 @Entity
 public class Manager extends User {
     private String projectName;

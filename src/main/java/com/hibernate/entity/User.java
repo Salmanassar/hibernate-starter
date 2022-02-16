@@ -18,7 +18,7 @@ import java.util.List;
 @ToString(exclude = {"company", "profile", "chats"})
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 @Table(name = "users", schema = "public")
-public class User implements Comparable<User> {
+public class User implements Comparable<User>, BaseEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
